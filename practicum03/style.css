@@ -1,0 +1,224 @@
+/* Практична робота №3 — Трекер витрат, гаманець (класи PHP)
+   Палітра: м'ятний / бірюзовий / білий */
+
+:root {
+    --white: #ffffff;
+    --mint-wash: #eefaf5;   /* фон сторінки */
+    --mint: #c9eee0;        /* лінії, звичайні мітки */
+    --turquoise: #17a398;   /* акцент */
+    --teal-deep: #0f4f4a;   /* текст */
+    --teal-soft: #5c8c86;   /* другорядний текст */
+    --coral: #d9534f;       /* витрати */
+    --coral-wash: #fdf1f0;  /* фон регулярних витрат */
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: "Manrope", system-ui, sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    color: var(--teal-deep);
+    background:
+        radial-gradient(circle at 85% -10%, var(--mint) 0, transparent 45%),
+        var(--mint-wash);
+}
+
+h1, h2 {
+    font-family: "Unbounded", "Manrope", sans-serif;
+    font-weight: 700;
+    margin: 0;
+}
+
+/* ---------- Шапка ---------- */
+.page-header {
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 56px 24px 32px;
+}
+
+.page-header h1 {
+    font-size: clamp(2rem, 5vw, 3.25rem);
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+}
+
+.page-header p {
+    margin: 8px 0 0;
+    color: var(--teal-soft);
+}
+
+/* ---------- Сітка: таблиця + чек ---------- */
+.layout {
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 0 24px 48px;
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 28px;
+    align-items: start;
+}
+
+/* ---------- Картка з таблицею ---------- */
+.card {
+    background: var(--white);
+    border-radius: 20px;
+    padding: 24px;
+    border: 1px solid var(--mint);
+}
+
+.card h2 {
+    font-size: 1.1rem;
+    margin-bottom: 16px;
+}
+
+/* ---------- Таблиця транзакцій ---------- */
+.tx-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.92rem;
+}
+
+.tx-table th {
+    padding: 10px 12px;
+    text-align: left;
+    font-weight: 500;
+    color: var(--teal-soft);
+    border-bottom: 1.5px solid var(--mint);
+}
+
+.tx-table td {
+    padding: 12px;
+    border-bottom: 1px dashed var(--mint);
+    vertical-align: top;
+}
+
+.tx-table .num {
+    text-align: right;
+    white-space: nowrap;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+}
+
+.plus {
+    color: var(--turquoise);
+}
+
+.minus {
+    color: var(--coral);
+}
+
+/* Об'єкти похідного класу RecurringExpense */
+.tx-table tr.recurring td {
+    background: var(--coral-wash);
+}
+
+.badge {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    background: var(--mint-wash);
+    border: 1px solid var(--mint);
+}
+
+.recurring .badge {
+    border-color: var(--coral);
+    color: var(--coral);
+}
+
+.section-label {
+    margin-top: 20px;
+}
+
+/* ---------- Правий блок у вигляді чека ---------- */
+.receipt {
+    position: sticky;
+    top: 24px;
+    background: var(--white);
+    padding: 24px 24px 36px;
+    border-radius: 20px 20px 0 0;
+    /* зубчастий нижній край, як у паперового чека */
+    -webkit-mask:
+        radial-gradient(circle 8px at 50% 100%, transparent 98%, #000) 50% 100% / 22px 100% repeat-x;
+    mask:
+        radial-gradient(circle 8px at 50% 100%, transparent 98%, #000) 50% 100% / 22px 100% repeat-x;
+}
+
+.receipt h2 {
+    font-size: 1.1rem;
+    margin-bottom: 12px;
+}
+
+.receipt dl {
+    margin: 0 0 20px;
+}
+
+.receipt-line {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px dashed var(--mint);
+}
+
+.receipt-line dt {
+    color: var(--teal-soft);
+}
+
+.receipt-line dd {
+    margin: 0;
+    font-weight: 700;
+    text-align: right;
+}
+
+.receipt-total-label {
+    margin: 0;
+    font-size: 0.9rem;
+    color: var(--teal-soft);
+}
+
+.receipt-total {
+    margin: 4px 0 0;
+    font-family: "Unbounded", sans-serif;
+    font-size: 1.7rem;
+    font-weight: 700;
+    color: var(--turquoise);
+    font-variant-numeric: tabular-nums;
+    line-height: 1.2;
+}
+
+.receipt-note {
+    margin: 0;
+    padding-top: 12px;
+    border-top: 1px dashed var(--mint);
+    font-size: 0.85rem;
+    color: var(--teal-soft);
+}
+
+/* ---------- Футер ---------- */
+.page-footer {
+    text-align: center;
+    padding: 0 24px 32px;
+    font-size: 0.85rem;
+    color: var(--teal-soft);
+}
+
+/* ---------- Мобільна версія ---------- */
+@media (max-width: 760px) {
+    .layout {
+        grid-template-columns: 1fr;
+    }
+
+    .receipt {
+        position: static;
+    }
+
+    .card {
+        overflow-x: auto;
+    }
+}
