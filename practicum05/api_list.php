@@ -7,7 +7,15 @@ $pdo = require_once __DIR__ . '/db.php';
 
 header('Content-Type: application/json; charset=utf-8');
 
-$q = trim((string) ($_GET['q'] ?? ''));
+$q = $_GET['q'] ?? '';
+
+// q[]=... приходить як масив — це некоректний запит
+if (!is_string($q)) {
+    http_response_code(422);
+    echo json_encode(['error' => 'Параметр q має бути рядком'], JSON_UNESCAPED_UNICODE);
+    exit;
+}
+$q = trim($q);
 
 if ($q === '') {
     $rows = $pdo->query('SELECT * FROM transactions ORDER BY transaction_date, id')->fetchAll();

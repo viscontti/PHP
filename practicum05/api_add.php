@@ -13,14 +13,25 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
-// Дані форми, надіслані з fetch як FormData, читаються через $_POST
-$amount = str_replace(',', '.', trim((string) ($_POST['amount'] ?? '')));
-$category = trim((string) ($_POST['category'] ?? ''));
-$date = trim((string) ($_POST['transaction_date'] ?? ''));
+// Дані форми, надіслані з fetch як FormData, читаються через $_POST.
+// Поле може прийти масивом (amount[]=...) — тоді вважаємо його порожнім
+function field(string $name): string
+{
+    $value = $_POST[$name] ?? '';
+    return is_string($value) ? trim($value) : '';
+}
+
+$amount = str_replace(',', '.', field('amount'));
+$category = field('category');
+$date = field('transaction_date');
 
 $dateOk = preg_match('/^(\d{4})-(\d{2})-(\d{2})$/', $date, $m) && checkdate((int) $m[2], (int) $m[3], (int) $m[1]);
 
-if (!is_numeric($amount) || (float) $amount == 0 || $category === '' || mb_strlen($category) > 100 || !$dateOk) {
+// Колонка amount — DECIMAL(10,2): до 99 999 999,99 за модулем, 2 знаки після коми
+$amount = is_numeric($amount) ? round((float) $amount, 2) : 0.0;
+$amountOk = $amount != 0 && abs($amount) <= 99999999.99;
+
+if (!$amountOk || $category === '' || mb_strlen($category) > 100 || !$dateOk) {
     http_response_code(422);
     echo json_encode(['error' => 'Перевірте введені дані'], JSON_UNESCAPED_UNICODE);
     exit;
@@ -29,12 +40,12 @@ if (!is_numeric($amount) || (float) $amount == 0 || $category === '' || mb_strle
 $stmt = $pdo->prepare(
     'INSERT INTO transactions (amount, category, transaction_date) VALUES (:amount, :category, :date)'
 );
-$stmt->execute([':amount' => (float) $amount, ':category' => $category, ':date' => $date]);
+$stmt->execute([':amount' => $amount, ':category' => $category, ':date' => $date]);
 
 http_response_code(201);
 echo json_encode([
     'id' => (int) $pdo->lastInsertId(),
-    'amount' => (float) $amount,
+    'amount' => $amount,
     'category' => $category,
     'transaction_date' => $date,
 ], JSON_UNESCAPED_UNICODE);
