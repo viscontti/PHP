@@ -1,0 +1,5 @@
+api_before.php (N+1):
+X-SQL-Queries: 1001
+api_before.php&category=Таксі (N+1):
+X-SQL-Queries: 88
+Записів у таблиці: 1000

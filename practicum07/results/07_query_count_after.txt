@@ -1,0 +1,6 @@
+api.php (GROUP BY):
+X-SQL-Queries: 2
+api.php&category=Таксі (GROUP BY):
+X-SQL-Queries: 2
+Відповіді api_before.php і api.php однакові:
+так

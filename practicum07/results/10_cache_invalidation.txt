@@ -1,0 +1,10 @@
+1) баланс (перший запит після попередніх тестів):
+X-Cache: HIT X-SQL-Queries: 0 {"success":true,"data":{"balance":-13680}} 
+2) баланс повторно:
+X-Cache: HIT X-SQL-Queries: 0 {"success":true,"data":{"balance":-13680}} 
+3) додаємо транзакцію -100 Таксі:
+{"success":true,"data":{"id":1024,"amount":-100,"category":"Таксі","transaction_date":"2026-11-07"}}
+4) баланс після додавання (кеш інвалідовано -> MISS, нове значення):
+X-Cache: MISS X-SQL-Queries: 1 {"success":true,"data":{"balance":-13780}} 
+5) баланс повторно (знову з кешу):
+X-Cache: HIT X-SQL-Queries: 0 {"success":true,"data":{"balance":-13780}} 
