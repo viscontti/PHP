@@ -1,0 +1,9 @@
+# Практична робота №8 — доступ лише до точок входу й статики (Apache 2.4)
+Options -Indexes
+<FilesMatch "^(bootstrap|db|functions|partials|router)\.php$">
+    Require all denied
+</FilesMatch>
+<FilesMatch "^\.">
+    Require all denied
+</FilesMatch>
+RedirectMatch 404 ^/(logs|sql|attack)/
